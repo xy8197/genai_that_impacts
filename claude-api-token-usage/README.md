@@ -31,13 +31,21 @@ git clone https://github.com/your-org/genai_that_impacts.git
 cd genai_that_impacts/claude-api-token-usage
 ```
 
-**2. Install dependencies**
+**2. Upgrade pip**
+
+The `anthropic` package requires a recent pip (21+) to resolve its compiled dependencies correctly. If you skip this step you may see errors about `jiter` or other packages.
+
+```bash
+pip install --upgrade pip
+```
+
+**3. Install dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**3. Set your API key**
+**4. Set your API key**
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
