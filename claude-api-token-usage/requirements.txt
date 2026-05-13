@@ -1,2 +1,3 @@
 anthropic
 plyer>=2.1.0
+tiktoken        # local token counting for Pro user estimates (no API key needed)

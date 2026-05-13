@@ -6,13 +6,49 @@ A drop-in wrapper around the Anthropic Python SDK that automatically tracks toke
 
 ## Who this is for
 
-> **Claude Pro / Claude Code subscriber?** This project is **not designed for you** — yet.
->
-> Claude Pro is a flat monthly subscription. You are not charged per token, and you don't have API rate limits measured in tokens per minute. The core features of this tracker (cost ceilings, token budgets, rate-limit halts) only apply when you are billed per token through the **Anthropic API**.
->
-> This project is for developers and teams using the **Anthropic API** directly — where every token has a cost and runaway usage is a real risk.
->
-> If you are a Pro user evaluating whether to adopt the API, this project is a useful reference for how token cost controls work in practice. When you are ready to add API access, you can use this tracker as-is.
+This project supports two user types with different entry points:
+
+| | Claude Pro / Claude Code user | Anthropic API user |
+|---|---|---|
+| **API key needed?** | No | Yes |
+| **Charged per token?** | No (flat fee) | Yes |
+| **Use case** | Estimate what prompts would cost before adopting the API | Track live usage, enforce cost limits, halt at 95% |
+| **Entry point** | `TokenEstimator` + `examples/estimate_demo.py` | `TrackedAnthropicClient` + `examples/track_usage_demo.py` |
+
+### Claude Pro / Claude Code users
+Use `TokenEstimator` to estimate token counts and costs **locally — no API key required**. Useful for sizing prompts, understanding how API billing works, and deciding whether to adopt API access.
+
+```python
+from utils import TokenEstimator
+
+estimator = TokenEstimator(model="claude-sonnet-4-6")
+result = estimator.estimate(
+    messages=[{"role": "user", "content": "Explain RAG in one sentence."}],
+    max_tokens=200,
+)
+estimator.print_estimate(result)
+```
+
+Run the Pro user demo:
+```bash
+python examples/estimate_demo.py
+```
+
+### Anthropic API users
+Use `TrackedAnthropicClient` to track live usage, enforce token/cost limits, and receive warnings as you approach your rate-limit ceiling. Requires `ANTHROPIC_API_KEY`.
+
+```python
+from utils import TrackedAnthropicClient
+
+client = TrackedAnthropicClient(log_path="logs/usage.jsonl")
+response = client.messages.create(model="claude-sonnet-4-6", ...)
+client.tracker.print_summary()
+```
+
+Run the API user demo:
+```bash
+python examples/track_usage_demo.py
+```
 
 ## Why this exists
 
@@ -294,10 +330,13 @@ Response: Tokens are sub-word units a model uses internally; a single word can b
 claude-api-token-usage/
   utils/
     __init__.py
-    token_tracker.py      # TokenUsageTracker, ExecutionHaltedError
-    tracked_client.py     # TrackedAnthropicClient (drop-in SDK wrapper)
+    auth.py               # API key resolver, Claude Code detection
+    estimator.py          # TokenEstimator — local estimation, no API key needed (Pro users)
+    token_tracker.py      # TokenUsageTracker, ExecutionHaltedError, PRICING
+    tracked_client.py     # TrackedAnthropicClient — live tracking (API users)
   examples/
-    track_usage_demo.py   # Runnable demo with both pre-check options
+    estimate_demo.py      # Pro / Claude Code users — no API key required
+    track_usage_demo.py   # API users — live tracking with warnings and halt
   requirements.txt
   README.md
 ```
