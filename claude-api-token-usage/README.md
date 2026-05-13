@@ -4,9 +4,19 @@ A drop-in wrapper around the Anthropic Python SDK that automatically tracks toke
 
 ---
 
+## Who this is for
+
+> **Claude Pro / Claude Code subscriber?** This project is **not designed for you** — yet.
+>
+> Claude Pro is a flat monthly subscription. You are not charged per token, and you don't have API rate limits measured in tokens per minute. The core features of this tracker (cost ceilings, token budgets, rate-limit halts) only apply when you are billed per token through the **Anthropic API**.
+>
+> This project is for developers and teams using the **Anthropic API** directly — where every token has a cost and runaway usage is a real risk.
+>
+> If you are a Pro user evaluating whether to adopt the API, this project is a useful reference for how token cost controls work in practice. When you are ready to add API access, you can use this tracker as-is.
+
 ## Why this exists
 
-When building with Claude, it's easy to lose track of how many tokens you're consuming — especially across multi-step workflows. This tool gives you visibility into usage in real time, warns you before you hit limits, and stops new executions cleanly when you're close to your rate-limit ceiling.
+When building with Claude via the API, it's easy to lose track of how many tokens you're consuming — especially across multi-step workflows. This tool gives you visibility into usage in real time, warns you before you hit limits, and stops new executions cleanly when you're close to your rate-limit ceiling.
 
 ---
 
