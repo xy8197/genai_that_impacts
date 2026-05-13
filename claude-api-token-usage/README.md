@@ -31,7 +31,7 @@ estimator.print_estimate(result)
 
 Run the Pro user demo:
 ```bash
-python examples/estimate_demo.py
+python3 examples/estimate_demo.py
 ```
 
 ### Anthropic API users
@@ -47,7 +47,7 @@ client.tracker.print_summary()
 
 Run the API user demo:
 ```bash
-python examples/track_usage_demo.py
+python3 examples/track_usage_demo.py
 ```
 
 ## Why this exists
@@ -125,19 +125,21 @@ source .venv/bin/activate   # Windows: .venv\Scripts\activate
 You can verify your Python version before continuing:
 
 ```bash
-python --version   # should show Python 3.9.x or higher
+python3 --version   # should show Python 3.9.x or higher
 ```
+
+> **`python` vs `python3`** — On many systems (especially macOS and Linux), `python` points to Python 2 and `python3` points to Python 3. Use `python3` and `pip3` throughout this guide unless you have confirmed that `python` maps to Python 3 in your environment.
 
 **3. Upgrade pip**
 
 ```bash
-pip install --upgrade pip
+pip3 install --upgrade pip
 ```
 
 **4. Install dependencies**
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 **5. Set your API key and optional Slack webhook**
@@ -239,11 +241,43 @@ response = client.messages.create(...)  # pre_check runs automatically
 
 ## Run the demo
 
+Choose the demo that matches your subscription type:
+
+---
+
+### I have a Claude Pro / Claude Code subscription (no API key)
+
+No setup needed beyond installation. Run:
+
 ```bash
-python examples/track_usage_demo.py
+python3 examples/estimate_demo.py
 ```
 
-To switch between explicit and automatic pre-check, edit the `client = TrackedAnthropicClient(...)` block in the demo file.
+This estimates token counts and costs locally — no API call is made.
+
+---
+
+### I have an Anthropic API key
+
+Make sure your key is exported first:
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Then run:
+
+```bash
+python3 examples/track_usage_demo.py
+```
+
+This makes live API calls, tracks usage in real time, and halts at 95% of your limit.
+
+To switch between explicit and automatic pre-check, edit the `auto_pre_check` parameter in the `TrackedAnthropicClient(...)` block inside the demo file.
+
+---
+
+> **`python` not found?** Try `python3` instead. On macOS and Linux, `python` often points to Python 2. If `python3` is also not found, check that your conda environment is activated (`conda activate claude-tracker`) or your virtual environment is active (`source .venv/bin/activate`).
 
 ---
 
