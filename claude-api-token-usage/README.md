@@ -22,6 +22,13 @@ When building with Claude, it's easy to lose track of how many tokens you're con
 
 ---
 
+## Requirements
+
+| Requirement | Minimum version | Notes |
+|---|---|---|
+| Python | 3.9+ | Python 3.7 and 3.8 are end-of-life and cannot install the `anthropic` SDK's compiled dependencies |
+| pip | 21+ | Older pip versions cannot parse the `pyproject.toml` format used by modern packages |
+
 ## Installation
 
 **1. Clone the repo**
@@ -31,21 +38,41 @@ git clone https://github.com/your-org/genai_that_impacts.git
 cd genai_that_impacts/claude-api-token-usage
 ```
 
-**2. Upgrade pip**
+**2. Set up a Python 3.9+ environment**
 
-The `anthropic` package requires a recent pip (21+) to resolve its compiled dependencies correctly. If you skip this step you may see errors about `jiter` or other packages.
+If you are using Anaconda (or have Python 3.7/3.8 as your default), create a fresh environment first:
+
+```bash
+conda create -n claude-tracker python=3.9
+conda activate claude-tracker
+```
+
+If you are using plain Python and already have 3.9+, a virtual environment is recommended:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+```
+
+You can verify your Python version before continuing:
+
+```bash
+python --version   # should show Python 3.9.x or higher
+```
+
+**3. Upgrade pip**
 
 ```bash
 pip install --upgrade pip
 ```
 
-**3. Install dependencies**
+**4. Install dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**4. Set your API key**
+**5. Set your API key**
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
