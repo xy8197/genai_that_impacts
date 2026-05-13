@@ -1,6 +1,8 @@
+import sys
 from typing import Optional
 import anthropic
 
+from .auth import resolve_api_key
 from .token_tracker import TokenUsageTracker, ExecutionHaltedError
 
 
@@ -63,6 +65,13 @@ class TrackedAnthropicClient:
     Drop-in wrapper around anthropic.Anthropic that automatically tracks
     token usage and cost on every messages.create() call.
 
+    Auth:
+        API key is resolved automatically in this order:
+          1. Explicit api_key= argument
+          2. ANTHROPIC_API_KEY environment variable
+        If neither is found, a context-aware message is printed explaining how to
+        obtain a key (with extra guidance when running inside Claude Code).
+
     Token and cost limits are auto-detected from the Anthropic API rate-limit
     headers returned on the first call (based on your subscription tier).
     You can override them explicitly via token_limit / cost_limit if needed.
@@ -95,7 +104,10 @@ class TrackedAnthropicClient:
         auto_pre_check: bool = False,
         **kwargs,
     ):
-        self._client = anthropic.Anthropic(*args, **kwargs)
+        api_key = resolve_api_key(kwargs.pop("api_key", None))
+        if not api_key:
+            sys.exit(1)
+        self._client = anthropic.Anthropic(*args, api_key=api_key, **kwargs)
 
         # Use the default model as a starting point; updated per-call if model kwarg changes
         default_model = "claude-sonnet-4-6"

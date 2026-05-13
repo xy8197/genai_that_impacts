@@ -22,6 +22,28 @@ When building with Claude, it's easy to lose track of how many tokens you're con
 
 ---
 
+## Authentication
+
+This tracker calls the **Anthropic API**, which requires an API key — separate from a claude.ai Pro or Claude Code subscription.
+
+| Scenario | What to do |
+|---|---|
+| **API key user** | Set `ANTHROPIC_API_KEY=sk-ant-...` in your shell, or pass `api_key=` to `TrackedAnthropicClient` |
+| **Claude Code / Pro user** | claude.ai Pro gives you access to Claude Code (the CLI), but **not** the Anthropic API. You still need a separate API key from [console.anthropic.com](https://console.anthropic.com/settings/keys) |
+
+The client resolves your key automatically in this order:
+1. Explicit `api_key=` argument passed to `TrackedAnthropicClient`
+2. `ANTHROPIC_API_KEY` environment variable
+
+If no key is found, a context-aware message is printed. If you are running inside Claude Code, the message will explain the Pro vs API distinction specifically.
+
+```bash
+# Set once in your shell profile (~/.zshrc or ~/.bashrc)
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+---
+
 ## Requirements
 
 | Requirement | Minimum version | Notes |
@@ -72,16 +94,11 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-**5. Set your API key**
+**5. Set your API key and optional Slack webhook**
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-```
-
-Optionally, set a Slack webhook URL for notifications:
-
-```bash
-export SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+export ANTHROPIC_API_KEY=sk-ant-...                          # required — see Authentication above
+export SLACK_WEBHOOK_URL=https://hooks.slack.com/services/... # optional
 ```
 
 ---

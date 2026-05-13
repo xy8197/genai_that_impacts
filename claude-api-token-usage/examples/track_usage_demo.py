@@ -3,12 +3,13 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from utils import TrackedAnthropicClient, ExecutionHaltedError
+from utils import TrackedAnthropicClient, ExecutionHaltedError, is_claude_code
 
-API_KEY = os.getenv("ANTHROPIC_API_KEY")
-if not API_KEY:
-    print("Error: ANTHROPIC_API_KEY environment variable is not set.")
-    sys.exit(1)
+# API key is resolved automatically from ANTHROPIC_API_KEY env var.
+# If not set, TrackedAnthropicClient will print context-aware setup instructions and exit.
+# Running inside Claude Code? See README — claude.ai Pro and API access are separate.
+if is_claude_code():
+    print("[Info] Running inside Claude Code. API key will be read from ANTHROPIC_API_KEY.")
 
 PROMPTS = [
     "What is prompt caching in LLMs? Answer in one sentence.",
@@ -38,7 +39,7 @@ MAX_TOKENS = 100
 
 # --- Option A: explicit pre_check (default, no extra round-trips) ---
 client = TrackedAnthropicClient(
-    api_key=API_KEY,
+    # api_key is resolved automatically from ANTHROPIC_API_KEY — no need to pass it here
     log_path="logs/usage.jsonl",
     slack_webhook_url=os.getenv("SLACK_WEBHOOK_URL"),
     notify_desktop=False,
