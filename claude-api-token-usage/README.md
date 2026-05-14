@@ -1,6 +1,6 @@
 # Claude API Token Usage Tracker
 
-A drop-in wrapper around the Anthropic Python SDK that automatically tracks token usage and cost across your session — with proactive warnings, a hard halt at 95%, and optional pre-call estimation to avoid rate-limit surprises.
+A drop-in wrapper around the Anthropic Python SDK that automatically tracks token usage and cost across your session — with proactive warnings, a hard halt at 95%, and optional pre-call estimation to avoid rate-limit surprises..
 
 ---
 
